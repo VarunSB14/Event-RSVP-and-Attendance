@@ -1,0 +1,22 @@
+curl -X GET http://localhost:5000/api/clubs -H "Content-Type: application/json"
+curl -X POST http://localhost:5000/api/clubs \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "New Club",
+  "location": "Boston",
+  "capacity": 80,
+  "yellow_threshold": 60,
+  "current_occupancy": 0,
+  "music": "Jazz"
+}'
+curl -X PUT http://localhost:5000/api/clubs/1 \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "Updated Club Name",
+  "location": "San Francisco",
+  "capacity": 90,
+  "yellow_threshold": 70,
+  "current_occupancy": 30,
+  "music": "Electronic"
+}'
+curl -X DELETE http://localhost:5000/api/clubs/1
