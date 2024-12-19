@@ -1,22 +1,43 @@
-curl -X GET http://localhost:5000/api/clubs -H "Content-Type: application/json"
-curl -X POST http://localhost:5000/api/clubs \
+curl -X GET http://localhost:5000/api/events
+
+curl -X POST http://localhost:5000/api/events \
 -H "Content-Type: application/json" \
 -d '{
-  "name": "New Club",
-  "location": "Boston",
-  "capacity": 80,
-  "yellow_threshold": 60,
-  "current_occupancy": 0,
-  "music": "Jazz"
+    "title": "Tech Conference 2024",
+    "description": "A conference for tech enthusiasts.",
+    "date": "2024-01-15",
+    "time": "10:00:00",
+    "location": "Convention Center",
+    "capacity": 100
 }'
-curl -X PUT http://localhost:5000/api/clubs/1 \
+
+curl -X GET http://localhost:5000/api/events/1
+
+curl -X PUT http://localhost:5000/api/events/1 \
 -H "Content-Type: application/json" \
 -d '{
-  "name": "Updated Club Name",
-  "location": "San Francisco",
-  "capacity": 90,
-  "yellow_threshold": 70,
-  "current_occupancy": 30,
-  "music": "Electronic"
+    "title": "Updated Tech Conference 2024",
+    "description": "An updated description for the conference.",
+    "date": "2024-01-16",
+    "time": "11:00:00",
+    "location": "Updated Convention Center",
+    "capacity": 120,
+    "available_spots": 100
 }'
-curl -X DELETE http://localhost:5000/api/clubs/1
+
+curl -X DELETE http://localhost:5000/api/events/1
+
+curl -X POST http://localhost:5000/api/events/1/rsvp \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": 1
+}'
+
+curl -X PUT http://localhost:5000/api/events/1/rsvp \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": 1,
+    "status": "Attended"
+}'
+
+curl -X GET http://localhost:5000/api/events/1/rsvp
