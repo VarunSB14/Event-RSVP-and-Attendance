@@ -1,33 +1,56 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardTitle, Button } from 'reactstrap';
+import { Card, CardBody, CardTitle, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 class EventDisplay extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { openModal: false, attendees: [] };
+    }
+
+    toggleModal = () =>  {
+        this.setState({ openModal: !this.state.openModal });
+    }
+
     handleViewAttendees = () => {
         fetch(`http://localhost:5000/api/events/${this.props.event.id}/rsvp`)
             .then(response => response.json())
-            .then(data => alert(`Attendees: ${data.map(rsvp => rsvp.name).join(', ')}`))
+            .then(data => this.setState({ attendees: data }, this.toggleModal))
             .catch(error => console.error('Error fetching RSVPs:', error));
     };
     
-    render()  {
+    render()    {
         const { event, toggleModal, onRSVP, onDelete } = this.props;
-        const { title, date, time, location, capacity, available_spots } = event;
+        const { attendees, openModal } = this.state;
 
-        return (
+        return  (
             <Card className='text-center'>
                 <CardBody>
-                    <CardTitle tag='h5'>{title}</CardTitle>
-                    <p>Date: {date}</p>
-                    <p>Time: {time}</p>
-                    <p>Location: {location}</p>
-                    <p>Available Spots {available_spots}/{capacity}</p>
+                    <CardTitle tag='h5'>{event.title}</CardTitle>
+                    <p>Date: {event.date}</p>
+                    <p>Time: {event.time}</p>
+                    <p>Location: {event.location}</p>
+                    <p>Available Spots {event.available_spots}/{event.capacity}</p>
                     <div>
-                        <Button color='primary' onClick={onRSVP}>RSVP</Button>
-                        <Button color='info' onClick={toggleModal}>Edit</Button>
+                        <Button color='primary' onClick={onRSVP}>RSVP</Button>{' '}
+                        <Button color='info' onClick={toggleModal}>Edit</Button>{' '}
                         <Button color='warning' onClick={this.handleViewAttendees}>View Attendees</Button>{' '}
                         <Button color='danger' onClick={onDelete}>Delete Event</Button>
                     </div>
                 </CardBody>
+                <Modal isOpen={openModal} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Attendees</ModalHeader>
+                    <ModalBody>
+                        {attendees.length > 0 ? (
+                            <ul>
+                                {attendees.map((attendee, index) => (
+                                    <li key={index}>{attendee.name}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No attendees yet.</p>
+                        )}
+                    </ModalBody>
+                </Modal>
             </Card>
         );
     }

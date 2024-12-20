@@ -50,3 +50,4 @@ class Events(Resource):
         event_id = exec_insert_returning(query, params)
         return {"id": event_id}
         
+        

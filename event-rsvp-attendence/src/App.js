@@ -29,7 +29,7 @@ class App extends Component {
         .then(data => this.setState({ selectedEvent: data, showModal: true }))
         .catch(error => console.error('Error fetching event details:', error));
     } else {
-      this.setState({ selectedEvent: null, showModal: true});
+      this.setState({ selectedEvent: null, showModal: true}); // New event
     }
   };
 
@@ -38,7 +38,7 @@ class App extends Component {
   };
 
   sortEventsByDate = () => {
-    const sorted = [...this.state.events].sort((a, b) => new Date(a.Date) - new Date(b.date));
+    const sorted = [...this.state.events].sort((a, b) => new Date(a.date) - new Date(b.date));
     this.setState({ events: sorted });
   };
 
@@ -54,21 +54,21 @@ class App extends Component {
       body: JSON.stringify({ user_id: this.state.userId })
     })
       .then((response) => response.json())
-      .then((data) => alert(data.message))
+      .then(() => this.fetchData())
       .catch((error) => console.error('Error RSVPing:', error));
   };
 
   deleteEvent = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}`, { method: 'DELETE' })
       .then(() => {
-        alert('Event deleted successfully!');
+        console.log('Event deleted successfully!');
         this.fetchData();
       })
       .catch((error) => console.error('Error deleting event:', error));
   };
 
   updateEvent = () => {
-    this.fetchData();
+    this.fetchData(); // Refresh event list
   };
 
   render() {
@@ -90,8 +90,8 @@ class App extends Component {
             onChange={this.handleFilter}
             className='mb-3'
           />
-          <Button color='secondary' onClick={this.sortEventsByDate}>Sort by Date</Button>
-          <Button color='secondary' onClick={() => this.filterByCategory('Workshops')}>Filter: Workshops</Button>
+          <Button color='secondary' onClick={this.sortEventsByDate}>Sort by Date</Button>{' '}
+          <Button color='secondary' onClick={() => this.filterByCategory('Workshops')}>Filter: Workshops</Button>{' '}
           <Button color='primary' onClick={() => this.toggleModal()}>Add New Event</Button>
         </FormGroup>
         <Row>

@@ -60,3 +60,4 @@ class Event(Resource):
         exec_commit("DELETE FROM events WHERE id = %s", (event_id,))
         return {"message": "Event deleted successfully"}
     
+    

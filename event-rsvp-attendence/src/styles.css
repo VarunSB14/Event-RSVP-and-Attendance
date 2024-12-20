@@ -89,3 +89,9 @@ button.color-info {
   padding: 0;
 }
 
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class EventModal extends Component {
     constructor(props) {
         super(props);
-        this.state = { ...props.event || { title: '', description: '', date: '', location: '', capacity: 50, category: 'Workshops' } };
+        this.state = { ...props.event || { title: '', description: '', date: '',  time: '', location: '', capacity: 50, category: 'Workshops' } };
     }
 
     handleChange = (e) => {
@@ -13,6 +13,12 @@ class EventModal extends Component {
     };
 
     handleSave = () => {
+        const { title, date, time, location } = this.state;
+        if (!title || !date || !time || !location) {
+            alert('Please fill in all required fields!');
+            return;
+        }
+
         const isNew = !this.props.event?.id; // Check if it's a new event
         const url = isNew ? `http://localhost:5000/api/events` : `http://localhost:5000/api/events/${this.props.event.id}`;
         const method = isNew ? 'POST' : 'PUT';
@@ -23,10 +29,10 @@ class EventModal extends Component {
             body: JSON.stringify(this.state)
         })
             .then(response => response.json())
-            .then(data => {
-                alert(isNew ? 'Event created successfully!': 'Event updated successfully!');
+            .then(() => {
+                console.log(isNew ? 'Event created successfully!': 'Event updated successfully!');
                 this.props.toggle();
-                this.props.onSave(); // Refresh event list 
+                this.props.onSave(); // Refresh events
             })
             .catch(error => console.error('Error saving event:', error));
     };
@@ -74,10 +80,10 @@ class EventModal extends Component {
                         </FormGroup>
                     </Form>
                 </ModalBody>
-                <ModalHeader>
+                <ModalFooter>
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                     <Button color="primary" onClick={this.handleSave}>Save</Button>
-                </ModalHeader>
+                </ModalFooter>
             </Modal>
         );
     }

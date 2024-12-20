@@ -7,27 +7,23 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        this.fetchDetails();
-        this.fetchRSVPs();
-    }
-
-    fetchDetails = () => {
         fetch(`http://localhost:5000/api/users/${this.props.userId}`)
             .then(response => response.json())
-            .then(data => this.setState({ user: data }))
-            .catch(error => console.error('Error fetching user details:', error));
-    };
-
-    fetchRSVPs = () => {
-        fetch(`http://localhost:5000/api/users/${this.props.userId}/rsvps`)
-            .then(response => response.json())
-            .then(data => this.setState({ rsvps: data }))
-            .catch(error => console.error('Error fetching user RSVPs:', error));
-    };
+            .then(data => this.setState({ user: data, rsvps: data.rsvps || [] }))
+            .catch(error => console.error('Error fetching user profile:', error));
+    }
 
     render() {
         const { user, rsvps } = this.state;
-        if (!user) return <p>Loading user profile...</p>;
+        if (!user) {
+            return (
+                <div>
+                    <p>Error loading user profile.</p>
+                    <button onClick={this.componentDidMount}>Retry</button>
+                </div>
+
+            );
+        }
         
         return (
             <div className='user-profile'>
