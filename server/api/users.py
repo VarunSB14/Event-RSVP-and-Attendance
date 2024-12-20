@@ -10,7 +10,7 @@ class Users(Resource):
         """Fetch all users or details of a specific user"""
         if user_id:
             # Fetch a single user by ID
-            user = exec_get_one("SELECT id, name, email, FROM users WHERE id = %s", (user_id,))
+            user = exec_get_one("SELECT id, name, email FROM users WHERE id = %s", (user_id,))
             if user is None:
                 return {"message": "User not found"}
             return {"id": user[0], "name": user[1], "email": user[2]}

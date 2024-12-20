@@ -1,0 +1,91 @@
+/* General Styles */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  background-color: #f7f4e9;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-weight: bold;
+  font-family: Verdana, sans-serif;
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Event Card */
+.card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card .btn {
+  margin: 5px;
+}
+
+/* Buttons */
+button {
+  font-size: 18px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button.color-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+button.color-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.color-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+button.color-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/* User Profile */
+.user-profile {
+  margin-top: 20px;
+}
+
+.user-profile ul {
+  list-style: none;
+  padding: 0;
+}
+
