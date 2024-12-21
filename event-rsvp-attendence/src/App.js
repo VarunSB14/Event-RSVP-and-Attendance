@@ -3,12 +3,20 @@ import { Container, Row, Col, Button, Input, FormGroup, Label } from 'reactstrap
 import EventDisplay from './EventDisplay';
 import EventModal from './EventModal';
 import UserProfile from './UserProfile';
+import Login from './Login';
 import './styles.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { events: [], selectedEvent: null, showModal: false, filter: '', userId: 1 };
+    this.state = { 
+      events: [], 
+      selectedEvent: null, 
+      showModal: false, 
+      filter: '', 
+      userId: null, 
+      user: null 
+    };
   }
 
   fetchData = () => {
@@ -19,8 +27,21 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      this.setState({ user: storedUser, userId: storedUser.id }, this.fetchData);
+    }
   }
+
+  handleLogin = (user) => {
+    this.setState({ user, userId: user.id });
+    this.fetchData();
+  };
+
+  handleLogout = () => {
+    this.setState({ user: null, userId: null });
+    localStorage.removeItem('user');
+  };
 
   toggleModal = (eventId = null) => {
     if (eventId) {
@@ -54,9 +75,20 @@ class App extends Component {
       body: JSON.stringify({ user_id: this.state.userId })
     })
       .then((response) => response.json())
-      .then(() => this.fetchData())
+      .then(() => {
+        this.fetchData();
+        //this.fetchUserProfile();
+      })
       .catch((error) => console.error('Error RSVPing:', error));
   };
+
+  // fetchUserProfile = () => {
+  //   fetch(`http://localhost:5000/api/users/${this.state.userId}`)
+  //     .then((response) => response.json())
+  //     .then((data) => this.setState({ user: data }))
+  //     .catch((error) => console.error('Error refreshing profile:', error));
+    
+  // };
 
   deleteEvent = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}`, { method: 'DELETE' })
@@ -72,7 +104,12 @@ class App extends Component {
   };
 
   render() {
-    const { events, showModal, selectedEvent, filter } = this.state;
+    const { events, showModal, selectedEvent, filter, user } = this.state;
+    
+    if (!user) {
+      return <Login onLogin={this.handleLogin}/>;
+    }
+    
     const filteredEvents = events.filter(event =>
       event.location && event.location.toLowerCase().includes(filter.toLowerCase())
     );
@@ -80,6 +117,7 @@ class App extends Component {
     return (
       <Container>
         <h1 className='text-center my-4'>Event RSVP and Attendance Tracker</h1>
+        <Button color='secondary' onClick={this.handleLogout}>Logout</Button>
         <FormGroup className='mb-4 text-center'>
           <Label for='filter'>Filter by Location:</Label>
           <Input
@@ -114,7 +152,7 @@ class App extends Component {
             onSave={this.updateEvent}
           />
         )}
-        <UserProfile userId={this.state.userId}/>
+        <UserProfile userId={this.state.userId} refreshProfile={() => this.fetchData()}/>
       </Container>
     );
   }

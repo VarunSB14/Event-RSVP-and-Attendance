@@ -32,20 +32,23 @@ class Events(Resource):
         parser.add_argument('time', type=str)
         parser.add_argument('location', type=str)
         parser.add_argument('capacity', type=int)
+        parser.add_argument('category', type=str)
         args = parser.parse_args()
         
         query = """
-            INSERT INTO events (title, description, date, time, location, capacity, available_spots)       
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO events (title, description, date, time, location, capacity, available_spots, category)       
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
-        params = (args['title'], 
-                  args['description'], 
-                  args['date'], 
-                  args['time'], 
-                  args['location'], 
-                  args['capacity'], 
-                  args['capacity']  # Initially, available_spots equals capacity
+        params = (
+                args['title'], 
+                args['description'], 
+                args['date'], 
+                args['time'], 
+                args['location'], 
+                args['capacity'], 
+                args['capacity'],  # Initially, available_spots equals capacity
+                args['category']  
         )
         event_id = exec_insert_returning(query, params)
         return {"id": event_id}

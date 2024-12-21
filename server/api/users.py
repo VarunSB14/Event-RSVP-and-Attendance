@@ -6,19 +6,46 @@ import json
 from .db_utils import *
 
 class Users(Resource):
-    def get(self, user_id=None):
-        """Fetch all users or details of a specific user"""
-        if user_id:
-            # Fetch a single user by ID
-            user = exec_get_one("SELECT id, name, email FROM users WHERE id = %s", (user_id,))
-            if user is None:
-                return {"message": "User not found"}
-            return {"id": user[0], "name": user[1], "email": user[2]}
+    # def get(self, user_id=None):
+    #     """Fetch all users or details of a specific user"""
+    #     if user_id:
+    #         # Fetch a single user by ID
+    #         user = exec_get_one("SELECT id, name, email FROM users WHERE id = %s", (user_id,))
+    #         if user is None:
+    #             return {"message": "User not found"}
+    #         return {"id": user[0], "name": user[1], "email": user[2]}
 
-        # Fetch all users
+    #     # Fetch all users
+    #     users = exec_get_all("SELECT id, name, email FROM users")
+    #     results = [{"id": user[0], "name": user[1], "email": user[2]} for user in users]
+    #     return results
+    
+    def get(self, user_id=None):
+        """Fetch user profile and RSVP'd events"""
+        if user_id:
+            # Fetch user details
+            user = exec_get_one("SELECT id, name, email FROM users WHERE id = %s", (user_id,))
+            if not user:
+                return {"message": "User not found"}, 404
+            
+            # Fetch RSVP'd events
+            rsvps = exec_get_all("""
+                SELECT events.id, events.title, events.date, events.time
+                FROM rsvps
+                JOIN events ON rsvps.event_id = events.id
+                WHERE rsvps.user_id = %s
+            """, (user_id,))
+            
+            return {
+                "id": user[0],
+                "name": user[1],
+                "email": user[2],
+                "rsvps": [{"id": rsvp[0], "title": rsvp[1], "date": str(rsvp[2]), "time": str(rsvp[3])} for rsvp in rsvps]
+            }
+
+        # Fetch all users if no user_id is provided
         users = exec_get_all("SELECT id, name, email FROM users")
-        results = [{"id": user[0], "name": user[1], "email": user[2]} for user in users]
-        return results
+        return [{"id": u[0], "name": u[1], "email": u[2]} for u in users]
     
     def post(self):
         """Register a new user"""
