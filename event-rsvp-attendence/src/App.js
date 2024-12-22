@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, Input, FormGroup, Label } from 'reactstrap
 import EventDisplay from './EventDisplay';
 import EventModal from './EventModal';
 import UserProfile from './UserProfile';
+import Register from './Register';
 import Login from './Login';
 import './styles.css';
 
@@ -50,7 +51,7 @@ class App extends Component {
         .then(data => this.setState({ selectedEvent: data, showModal: true }))
         .catch(error => console.error('Error fetching event details:', error));
     } else {
-      this.setState({ selectedEvent: null, showModal: true}); // New event
+      this.setState({ selectedEvent: null, showModal: true});
     }
   };
 
@@ -77,18 +78,9 @@ class App extends Component {
       .then((response) => response.json())
       .then(() => {
         this.fetchData();
-        //this.fetchUserProfile();
       })
       .catch((error) => console.error('Error RSVPing:', error));
   };
-
-  // fetchUserProfile = () => {
-  //   fetch(`http://localhost:5000/api/users/${this.state.userId}`)
-  //     .then((response) => response.json())
-  //     .then((data) => this.setState({ user: data }))
-  //     .catch((error) => console.error('Error refreshing profile:', error));
-    
-  // };
 
   deleteEvent = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}`, { method: 'DELETE' })
@@ -100,14 +92,28 @@ class App extends Component {
   };
 
   updateEvent = () => {
-    this.fetchData(); // Refresh event list
+    this.fetchData();
   };
 
   render() {
     const { events, showModal, selectedEvent, filter, user } = this.state;
     
     if (!user) {
-      return <Login onLogin={this.handleLogin}/>;
+      return (
+        <Container>
+          <Row>
+            <Col>
+              <Button onClick={() => this.setState({ showRegister: false })}>Login</Button>
+              <Button onClick={() => this.setState({ showRegister: true })}>Register</Button>
+            </Col>
+          </Row>
+          {this.state.showRegister ? (
+            <Register onRegister={() => this.setState({ showRegister: false })}/>
+          ) : (
+            <Login onLogin={this.handleLogin}/>
+          )}
+        </Container>
+      );
     }
     
     const filteredEvents = events.filter(event =>

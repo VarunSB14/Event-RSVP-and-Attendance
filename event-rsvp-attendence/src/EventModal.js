@@ -19,7 +19,7 @@ class EventModal extends Component {
             return;
         }
 
-        const isNew = !this.props.event?.id; // Check if it's a new event
+        const isNew = !this.props.event?.id; 
         const url = isNew ? `http://localhost:5000/api/events` : `http://localhost:5000/api/events/${this.props.event.id}`;
         const method = isNew ? 'POST' : 'PUT';
 
@@ -32,7 +32,7 @@ class EventModal extends Component {
             .then(() => {
                 console.log(isNew ? 'Event created successfully!': 'Event updated successfully!');
                 this.props.toggle();
-                this.props.onSave(); // Refresh events
+                this.props.onSave();
             })
             .catch(error => console.error('Error saving event:', error));
     };
