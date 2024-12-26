@@ -49,26 +49,3 @@ class RSVP(Resource):
         print("[DEBUG] RSVP successful")
         
         return {"message": "RSVP successful"}
-    
-    def put(self, event_id):
-        """Update RSVP status"""
-        parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int)
-        parser.add_argument('status', type=str)
-        args = parser.parse_args()
-        
-        user_id = args['user_id']
-        status = args['status']
-        
-        # Validate status
-        if status not in ['RSVP', 'Attended']:
-            return {"message": "Invalid status"}
-        
-        # Check if RSVP exists
-        rsvp = exec_get_one("SELECT id FROM rsvps WHERE user_id = %s AND event_id = %s", (user_id, event_id))
-        if rsvp is None:
-            return {"message": "RSVP not found for this user and event"}
-        
-        # Update the status
-        exec_commit("UPDATE rsvps SET status = %s WHERE user_id = %s AND event_id = %s", (status, user_id, event_id))
-        return {"message": "RSVP status updated successfully"}

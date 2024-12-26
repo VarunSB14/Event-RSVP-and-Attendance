@@ -64,11 +64,6 @@ class App extends Component {
     this.setState({ events: sorted });
   };
 
-  filterByCategory = (category) => {
-    const filtered = this.state.events.filter(event => event.category === category);
-    this.setState({ events: filtered });
-  };
-
   onRSVP = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}/rsvp`, {
       method: 'POST',
@@ -103,7 +98,6 @@ class App extends Component {
         <Container>
           <Row>
             <Col>
-              <Button onClick={() => this.setState({ showRegister: false })}>Login</Button>
               <Button onClick={() => this.setState({ showRegister: true })}>Register</Button>
             </Col>
           </Row>
@@ -135,7 +129,6 @@ class App extends Component {
             className='mb-3'
           />
           <Button color='secondary' onClick={this.sortEventsByDate}>Sort by Date</Button>{' '}
-          <Button color='secondary' onClick={() => this.filterByCategory('Workshops')}>Filter: Workshops</Button>{' '}
           <Button color='primary' onClick={() => this.toggleModal()}>Add New Event</Button>
         </FormGroup>
         <Row>

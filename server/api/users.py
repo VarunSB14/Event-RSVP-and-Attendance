@@ -47,39 +47,6 @@ class Users(Resource):
         query = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
         exec_commit(query, (name, email, hash))
         return {"message": "User registered successfully"}
-
-    def put(self, user_id):
-        """Update user details"""
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str)
-        parser.add_argument('email', type=str)
-        args = parser.parse_args()
-        
-        # Check if the user exists
-        user = exec_get_one("SELECT id FROM users WHERE id = %s", (user_id,))
-        if user is None:
-            return {"message": "User not found"}
-        
-        # Update user details
-        query = """
-            UPDATE users
-            SET name = COALESCE(%s, name), email = COALESCE(%s, email)
-            WHERE id = %s
-        """
-        exec_commit(query, (args.get('name'), args.get('email'), user_id))
-        return {"message": "User updated successfully"}
-    
-    def delete(self, user_id):
-        """Delete a user"""
-        # Check if the user exists
-        user = exec_get_one("SELECT id FROM users WHERE id = %s", (user_id,))
-        if user is None:
-            return {"message": "User not found"}
-        
-        # Delete the user
-        exec_commit("DELETE FROM users WHERE id = %s", (user_id,))
-        return {"message": "User deleted successfully"}
-        
             
         
             

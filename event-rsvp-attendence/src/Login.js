@@ -31,7 +31,7 @@ class Login extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <Input type='email' placeholder='Email' onChange={(e) => this.setState({ email: e.target.value })}/>
                 <Input type='password' placeholder='Password' onChange={(e) => this.setState({ password: e.target.value })}/>
-                <Button type='submit'>Login</Button>
+                <Button type='submit' color='primary'>Login</Button>
             </Form>
         );
     }

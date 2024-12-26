@@ -1,97 +1,123 @@
-/* General Styles */
+/* General Styling */
 body {
+  background-color: #f7f9fc; /* Soft, neutral background */
   font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  background-color: #f7f4e9;
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-h1 {
+/* Login Container Styling */
+form {
+  max-width: 400px;
+  width: 100%;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+/* Header Styling */
+form::before {
+  content: "Welcome Back!";
+  font-size: 24px;
   font-weight: bold;
-  font-family: Verdana, sans-serif;
-  font-size: 36px;
+  color: #007bff;
+  display: block;
   margin-bottom: 20px;
-  color: #333;
 }
 
-/* Event Card */
-.card {
+/* Input Styling */
+form input {
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-.card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+form input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
 
-.card-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.card .btn {
-  margin: 5px;
-}
-
-/* Buttons */
-button {
-  font-size: 18px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-button:hover {
-  transform: scale(1.1);
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-button.color-primary {
+/* Button Styling */
+form button {
   background-color: #007bff;
   color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button.color-danger {
-  background-color: #dc3545;
+form button:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+/* Navigation Buttons Styling */
+form .navigation-buttons {
+  position: absolute;
+  top: -45px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+form .navigation-buttons button {
+  font-size: 14px;
+  padding: 6px 12px;
+  background-color: #6c757d;
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button.color-warning {
-  background-color: #ffc107;
-  color: black;
+form .navigation-buttons button:hover {
+  background-color: #5a6268;
+  transform: scale(1.05);
 }
 
-button.color-info {
-  background-color: #17a2b8;
-  color: white;
-}
-
-/* User Profile */
-.user-profile {
+/* Footer Text */
+form::after {
+  content: "Plan your events effortlessly!";
+  display: block;
   margin-top: 20px;
+  font-size: 12px;
+  color: #777;
 }
 
-.user-profile ul {
-  list-style: none;
-  padding: 0;
-}
-
+/* Responsive Design */
 @media (max-width: 576px) {
-  .card {
-    width: 100%;
-    margin-bottom: 20px;
+  form {
+      padding: 20px;
+      max-width: 90%;
+  }
+
+  form button {
+      font-size: 14px;
+      padding: 10px;
+  }
+
+  form .navigation-buttons button {
+      font-size: 12px;
+      padding: 5px 10px;
   }
 }

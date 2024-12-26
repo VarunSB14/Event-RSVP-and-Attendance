@@ -40,5 +40,3 @@ INSERT INTO events (title, description, date, time, location, capacity, availabl
 ('Tech Conference 2024', 'A conference for tech enthusiasts.', '2024-01-15', '10:00', 'Convention Center', 100, 100),
 ('Art Workshop', 'Learn painting techniques.', '2024-01-20', '14:00', 'Art Studio', 20, 20),
 ('Music Concert', 'Live performance by famous bands.', '2024-02-10', '18:00', 'Music Hall', 500, 500);
-
-ALTER TABLE events ADD COLUMN category VARCHAR(50);
