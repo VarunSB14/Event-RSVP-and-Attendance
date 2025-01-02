@@ -1,19 +1,35 @@
 from flask_restful import Resource
-
-from flask_restful import request
 from flask_restful import reqparse
-import json
 from .db_utils import *
 
 class Event(Resource):
+    """
+    Class to handle operations related to a specific event.
+    
+    Methods:
+        get: Retrieve details of a specific event.
+        put: Update an existing event.
+        delete: Delete an event.
+    """
+    
     def get(self, event_id):
-        """Fetch details of a specific event"""
-        print(f"Fetching event with ID: {event_id}")
+        """
+        Retrieve details of a specific event by its ID.
+
+        Args:
+            event_id (int): ID of the event to fetch.
+
+        Returns:
+            dict: Details of the event if found.
+            tuple: Error message and HTTP 404 status code if event not found.
+        """
+        
+        
         event = exec_get_one("SELECT * FROM events WHERE id = %s", (event_id,))
-        print(f"Event details: {event}")
         if event is None:
             return {"message": "Event not found"}, 404
-            
+        
+        # Construct the response with event details 
         result = {
             "id": event[0],
             "title": event[1],
@@ -27,8 +43,16 @@ class Event(Resource):
         return result
     
     def put(self, event_id):
-        """Update an existing event"""
-        print(f"Updating event with ID: {event_id}")
+        """
+        Update details of an existing event.
+
+        Args:
+            event_id (int): ID of the event to update.
+
+        Returns:
+            dict: Success message upon successful update.
+        """
+        
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)
@@ -38,14 +62,13 @@ class Event(Resource):
         parser.add_argument('capacity', type=int)
         parser.add_argument('available_spots', type=int)
         args = parser.parse_args()
-        print(f"Update parameters: {args}")
         
+        # Update query and parameters
         query = """
             UPDATE events
             SET title = %s, description = %s, date = %s, time = %s, location = %s, capacity = %s, available_spots = %s
             WHERE id = %s
         """
-        
         params = (
             args['title'], 
             args['description'], 
@@ -57,14 +80,20 @@ class Event(Resource):
             event_id
         )
         exec_commit(query, params)
-        print("Event updated successfully")
         return {"message": "Event updated successfully"}
         
     def delete(self, event_id):
-        """Delete an event"""
-        print(f"Deleting event with ID: {event_id}")
+        """
+        Delete an event by its ID.
+
+        Args:
+            event_id (int): ID of the event to delete.
+
+        Returns:
+            dict: Success message upon successful deletion.
+        """
+        
         exec_commit("DELETE FROM events WHERE id = %s", (event_id,))
-        print("Event deleted successfully")
         return {"message": "Event deleted successfully"}
     
     

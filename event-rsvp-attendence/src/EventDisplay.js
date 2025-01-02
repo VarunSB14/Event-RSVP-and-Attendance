@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardTitle, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 class EventDisplay extends Component {
+    /**
+     * Component to display individual event details and related actions.
+     * Allows users to RSVP, edit, view attendees, and delete events.
+     */
     constructor(props) {
         super(props);
         this.state = { openModal: false, attendees: [] };
     }
 
+    // Toggles the modal visibility for viewing attendees
     toggleModal = () =>  {
-        this.setState({ openModal: !this.state.openModal });
-    }
+        this.setState({ openModal: !this.state.openModal });    // Local state for attendees and modal visibility
+    };
 
+    // Fetches and displays the list of attendees for the event
     handleViewAttendees = () => {
         fetch(`http://localhost:5000/api/events/${this.props.event.id}/rsvp`)
             .then(response => response.json())

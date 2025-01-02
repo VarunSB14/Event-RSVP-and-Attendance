@@ -2,16 +2,24 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class EventModal extends Component {
+    /**
+     * Component to handle adding or editing an event.
+     * Displays a form for event details.
+     */
     constructor(props) {
         super(props);
+
+        // Initialize state with event details or default values
         this.state = { ...props.event || { title: '', description: '', date: '',  time: '', location: '', capacity: 50, category: 'Workshops' } };
     }
 
+    // Handles changes to form inputs
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
     };
 
+    // Saves the event (create or update)
     handleSave = () => {
         const { title, date, time, location } = this.state;
         if (!title || !date || !time || !location) {
@@ -19,7 +27,7 @@ class EventModal extends Component {
             return;
         }
 
-        const isNew = !this.props.event?.id; 
+        const isNew = !this.props.event?.id;    // Determine if the event is new
         const url = isNew ? `http://localhost:5000/api/events` : `http://localhost:5000/api/events/${this.props.event.id}`;
         const method = isNew ? 'POST' : 'PUT';
 

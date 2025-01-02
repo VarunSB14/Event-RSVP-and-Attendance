@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 
 class UserProfile extends Component {
+    /**
+     * Component to display the user's profile and RSVP'd events.
+     */
     constructor(props) {
         super(props);
-        this.state = { user: null, rsvps: [] };
+        this.state = { 
+            user: null, // User details
+            rsvps: []   // List of RSVP'd events
+        };
     }
 
+    // Fetches user profile and RSVP details from the backend
     componentDidMount() {
         fetch(`http://localhost:5000/api/users/${this.props.userId}`)
             .then(response => response.json())
@@ -15,12 +22,14 @@ class UserProfile extends Component {
             .catch(error => console.error('Error fetching user profile:', error));
     }
 
+    // Re-fetch data if props change
     componentDidUpdate(prevProps) {
         if (prevProps.refreshProfile !== this.props.refreshProfile) {
             this.fetchData();
         }
     }
 
+    // Fetches user profile data
     fetchData = () => {
         fetch(`http://localhost:5000/api/users/${this.props.userId}`)
             .then(response => response.json())

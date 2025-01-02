@@ -1,14 +1,31 @@
 from flask_restful import Resource
 
 from flask_restful import request
-from flask_restful import reqparse
-import json
 import hashlib
 from .db_utils import *
 
-class Users(Resource):  
+class Users(Resource):
+    """
+    Class to handle operations related to user management.
+    
+    Methods:
+        get: Retrieve user details.
+        post: Register a new user.
+        put: Update user details.
+        delete: Delete a user.
+    """
+      
     def get(self, user_id=None):
-        """Fetch user profile and RSVP'd events"""
+        """
+        Retrieve details of a specific user by their ID.
+
+        Args:
+            user_id (int): ID of the user.
+
+        Returns:
+            dict: User details including RSVP'd events.
+        """
+        
         if user_id:
             # Fetch user details
             user = exec_get_one("SELECT id, name, email FROM users WHERE id = %s", (user_id,))
@@ -35,15 +52,22 @@ class Users(Resource):
         return [{"id": u[0], "name": u[1], "email": u[2]} for u in users]
     
     def post(self):
-        """Register a new user"""
+        """
+        Register a new user with hashed password.
+
+        Returns:
+            dict: Success message upon successful registration.
+        """
+        
         data = request.json
         name = data.get('name')
         email = data.get('email')
         password = data.get('password')
         
+        # Hash the password
         hash = hashlib.sha512(password.encode('utf-8')).hexdigest()
-        print(f"[DEBUG] Password hash for {email}: {hash}")
         
+        # Insert user into the database
         query = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
         exec_commit(query, (name, email, hash))
         return {"message": "User registered successfully"}

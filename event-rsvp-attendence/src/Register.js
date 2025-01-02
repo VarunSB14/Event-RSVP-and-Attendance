@@ -2,16 +2,21 @@ import React, { Component } from 'react';
 import { Button, FormGroup, Input, Label, Form } from 'reactstrap';
 
 class Register extends Component {
+    /**
+     * Component to handle user registration.
+     * Allows users to register with name, email, and password.
+     */
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
+            name: '',           // User's name
+            email: '',          // User's email
+            password: '',       // User's password
+            confirmPassword: '' // Confirmation of the password
         };
     }
 
+    // Handles form submission for registration
     handleSubmit = (e) => {
         e.preventDefault();
         const { name, email, password, confirmPassword } = this.state;
@@ -21,6 +26,7 @@ class Register extends Component {
             return;
         }
 
+        // Send user data to the backend
         fetch(`http://localhost:5000/api/users`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -30,18 +36,19 @@ class Register extends Component {
             .then((data) => {
                 if (data.message === 'User registered successfully') {
                     alert('User registered successfully')
-                    this.props.onRegister();
+                    this.props.onRegister();    // Invoke callback on success
                 } else {
-                    alert(data.message);
+                    alert(data.message);    // Show error message
                 }
             })
             .catch((error) => console.error('Error registering user:', error));
     };
 
+    // Handles changes in form inputs
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
-    }
+    };
 
     render() {
         const { name, email, password, confirmPassword } = this.state;

@@ -1,13 +1,24 @@
 from flask_restful import Resource
-
-from flask_restful import request
 from flask_restful import reqparse
-import json
 from .db_utils import *
 
 class Events(Resource):
+    """
+    Class to handle operations related to multiple events.
+    
+    Methods:
+        get: Retrieve all events.
+        post: Create a new event.
+    """
+    
     def get(self):
-        """Fetch all events"""
+        """
+        Fetch all events from the database.
+
+        Returns:
+            list: List of events with their details.
+        """
+        
         events = exec_get_all("SELECT * FROM events")
         results = []
         for event in events:
@@ -24,7 +35,13 @@ class Events(Resource):
         return results
 
     def post(self):
-        """Create a new event"""
+        """
+        Create a new event.
+
+        Returns:
+            dict: ID of the newly created event.
+        """
+        
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)

@@ -2,25 +2,31 @@ import React, { Component } from 'react';
 import { Button, Form, Input } from 'reactstrap';
 
 class Login extends Component {
+    /**
+     * Component to handle user login.
+     * Allows users to log in with email and password.
+     */
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '' };
+        this.state = { email: '', password: '' };   // Initialize form state
     }
 
+    // Handles form submission for login
     handleSubmit = (e) => {
         e.preventDefault();
         fetch('http://localhost:5000/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(this.state)  // Send email and password  
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.id) {
+                    // Save user data and invoke login callback
                     localStorage.setItem('user', JSON.stringify(data));
                     this.props.onLogin(data);
                 } else {
-                    alert(data.message);
+                    alert(data.message);    // Show error message on failure
                 }
             })
             .catch((error) => console.error('Error logging in:', error));

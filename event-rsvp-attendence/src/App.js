@@ -8,18 +8,23 @@ import Login from './Login';
 import './styles.css';
 
 class App extends Component {
+  /**
+  * Main application component that manages state and renders the app's main functionality.
+  * Handles user login, logout, event management, and RSVP actions.
+  */
   constructor(props) {
     super(props);
     this.state = { 
-      events: [], 
-      selectedEvent: null, 
-      showModal: false, 
-      filter: '', 
-      userId: null, 
-      user: null 
+      events: [],             // List of all events
+      selectedEvent: null,    // Event selected for editing
+      showModal: false,       // Whether the event modal is visible
+      filter: '',             // Filter for event locations
+      userId: null,           // Logged-in user's ID
+      user: null              // Logged-in user's details
     };
   }
 
+  // Fetches all events from the backend
   fetchData = () => {
     fetch(`http://localhost:5000/api/events`)
       .then((response) => response.json())
@@ -27,6 +32,7 @@ class App extends Component {
       .catch((error) => console.error('Error fetching events:', error));
   }
 
+  // Lifecycle method to initialize the app's state after mounting
   componentDidMount() {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
@@ -34,18 +40,22 @@ class App extends Component {
     }
   }
 
+  // Handles user login by updating state and fetching events
   handleLogin = (user) => {
     this.setState({ user, userId: user.id });
     this.fetchData();
   };
 
+  // Handles user logout by clearing state and local storage
   handleLogout = () => {
     this.setState({ user: null, userId: null });
     localStorage.removeItem('user');
   };
 
+  // Toggles the visibility of the event modal
   toggleModal = (eventId = null) => {
     if (eventId) {
+      // Fetch the event details if an event ID is provided
       fetch(`http://localhost:5000/api/events/${eventId}`)
         .then(response => response.json())
         .then(data => this.setState({ selectedEvent: data, showModal: true }))
@@ -55,15 +65,18 @@ class App extends Component {
     }
   };
 
+  // Updates the filter value for event locations
   handleFilter = (e) => {
     this.setState({ filter: e.target.value });
   };
 
+  // Sorts events by date in ascending order
   sortEventsByDate = () => {
     const sorted = [...this.state.events].sort((a, b) => new Date(a.date) - new Date(b.date));
     this.setState({ events: sorted });
   };
 
+  // Handles RSVP action for a specific event
   onRSVP = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}/rsvp`, {
       method: 'POST',
@@ -77,6 +90,7 @@ class App extends Component {
       .catch((error) => console.error('Error RSVPing:', error));
   };
 
+  // Deletes a specific event
   deleteEvent = (eventId) => {
     fetch(`http://localhost:5000/api/events/${eventId}`, { method: 'DELETE' })
       .then(() => {
@@ -86,6 +100,7 @@ class App extends Component {
       .catch((error) => console.error('Error deleting event:', error));
   };
 
+  // Updates events list after saving changes
   updateEvent = () => {
     this.fetchData();
   };
@@ -93,6 +108,7 @@ class App extends Component {
   render() {
     const { events, showModal, selectedEvent, filter, user } = this.state;
     
+    // If user is not logged in, show the login/register page
     if (!user) {
       return (
         <Container>
@@ -110,6 +126,7 @@ class App extends Component {
       );
     }
     
+    // Filter events based on location
     const filteredEvents = events.filter(event =>
       event.location && event.location.toLowerCase().includes(filter.toLowerCase())
     );
